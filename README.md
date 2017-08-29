@@ -1,6 +1,6 @@
 # SuperDataScience Deep learning A-Z course
 
-This repository contains all my projects from the [SuperDatascience Deep learning A-Z course](https://www.udemy.com/deeplearning)
+This repository contains all my projects from the [Udemy Deep learning A-Z course](https://www.udemy.com/deeplearning), and downloaded from [superdatascience - deeplearning](https://www.superdatascience.com/deep-learning/)
 
 ## Volume 1 - Supervised Deep learning
 

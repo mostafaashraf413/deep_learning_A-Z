@@ -17,11 +17,11 @@ import matplotlib.pyplot as plt
 import pandas as pd
 import os
 
-script_dir = os.path.dirname(__file__)
-abs_file_path = os.path.join(script_dir, 'Churn_Modelling.csv')
+#script_dir = os.path.dirname(__file__)
+#abs_file_path = os.path.join(script_dir, 'Churn_Modelling.csv')
 
 # Importing the dataset
-dataset = pd.read_csv(abs_file_path)
+dataset = pd.read_csv('Churn_Modelling.csv')
 X = dataset.iloc[:, 3:13].values
 y = dataset.iloc[:, 13].values
 

@@ -74,13 +74,18 @@ mean = accuracies.mean()
 variance = accuracies.std()
 
 # Tuning the ANN
-def build_classifier(optimizer):
+def build_classifier(optimizer, dropout=0.1):
     classifier = Sequential()
     classifier.add(Dense(units=6, kernel_initializer='uniform', activation='relu', input_dim=11))
     # Improving the ANN
     # Dropout Regularization to reduce overfitting if needed
-    classifier.add(Dropout(0.1))
+    classifier.add(Dropout(dropout))
     classifier.add(Dense(units=6, kernel_initializer='uniform', activation='relu'))
+    classifier.add(Dropout(dropout))
+    ####adding new hidden layer
+    classifier.add(Dense(units=6, kernel_initializer='uniform', activation='relu'))
+    classifier.add(Dropout(dropout))
+    #########
     classifier.add(Dense(units=1, kernel_initializer='uniform', activation='sigmoid'))
     classifier.compile(optimizer=optimizer, loss='binary_crossentropy', metrics=['accuracy'])
     return classifier
@@ -89,11 +94,12 @@ def build_classifier(optimizer):
 classifier = KerasClassifier(build_fn=build_classifier)
 parameters = {'batch_size': [25, 32],
               'epochs': [10, 50],
-              'optimizer': ['adam', 'rmsprop']}
+              'optimizer': ['adam', 'rmsprop'],
+              'dropout':[0.1, 0.2]}
 grid_search = GridSearchCV(estimator=classifier,
                            param_grid=parameters,
                            scoring='accuracy',
-                           cv=10)
+                           cv=5, n_jobs=1, verbose=10)
 grid_search = grid_search.fit(X_train, y_train)
 best_parameters = grid_search.best_params_
 best_accuracy = grid_search.best_score_

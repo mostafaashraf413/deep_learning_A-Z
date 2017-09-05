@@ -60,16 +60,18 @@ from tensorflow.contrib.keras import backend
 
 def build_classifier():
     classifier = Sequential()
-    classifier.add(Dense(units=6, kernel_initializer='uniform', activation='relu', input_dim=11))
-    classifier.add(Dense(units=6, kernel_initializer='uniform', activation='relu'))
+    classifier.add(Dropout(0.1))
+    classifier.add(Dense(units=9, kernel_initializer='uniform', activation='relu', input_dim=11))
+    classifier.add(Dropout(0.1))
+#    classifier.add(Dense(units=6, kernel_initializer='uniform', activation='relu'))
     classifier.add(Dense(units=1, kernel_initializer='uniform', activation='sigmoid'))
     classifier.compile(optimizer='adam', loss='binary_crossentropy', metrics=['accuracy'])
     return classifier
 
 
-classifier = KerasClassifier(build_fn=build_classifier, batch_size=10, epochs=10)
+classifier = KerasClassifier(build_fn=build_classifier, batch_size=25, epochs=50)
 # cv = 10 is the usual number used for cross validation (it runs 10 different experiments)
-accuracies = cross_val_score(estimator=classifier, X=X_train, y=y_train, cv=10, n_jobs=1)
+accuracies = cross_val_score(estimator=classifier, X=X_train, y=y_train, cv=5, n_jobs=1)
 mean = accuracies.mean()
 variance = accuracies.std()
 
@@ -80,12 +82,12 @@ def build_classifier(optimizer, dropout=0.1):
     # Improving the ANN
     # Dropout Regularization to reduce overfitting if needed
     classifier.add(Dropout(dropout))
-    classifier.add(Dense(units=6, kernel_initializer='uniform', activation='relu'))
-    classifier.add(Dropout(dropout))
-    ####adding new hidden layer
-    classifier.add(Dense(units=6, kernel_initializer='uniform', activation='relu'))
-    classifier.add(Dropout(dropout))
-    #########
+#    classifier.add(Dense(units=6, kernel_initializer='uniform', activation='relu'))
+#    classifier.add(Dropout(dropout))
+#    ####adding new hidden layer
+#    classifier.add(Dense(units=6, kernel_initializer='uniform', activation='relu'))
+#    classifier.add(Dropout(dropout))
+#    #########
     classifier.add(Dense(units=1, kernel_initializer='uniform', activation='sigmoid'))
     classifier.compile(optimizer=optimizer, loss='binary_crossentropy', metrics=['accuracy'])
     return classifier
@@ -94,12 +96,12 @@ def build_classifier(optimizer, dropout=0.1):
 classifier = KerasClassifier(build_fn=build_classifier)
 parameters = {'batch_size': [25, 32],
               'epochs': [10, 50],
-              'optimizer': ['adam', 'rmsprop'],
-              'dropout':[0.1, 0.2]}
+              'optimizer': ['adam', 'rmsprop'] } #, 'dropout':[0.1, 0.2]}
+
 grid_search = GridSearchCV(estimator=classifier,
                            param_grid=parameters,
                            scoring='accuracy',
-                           cv=5, n_jobs=1, verbose=10)
+                           cv=5, n_jobs=1)
 grid_search = grid_search.fit(X_train, y_train)
 best_parameters = grid_search.best_params_
 best_accuracy = grid_search.best_score_
